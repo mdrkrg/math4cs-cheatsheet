@@ -1,0 +1,31 @@
+name: Render cheatsheet
+on:
+  push:
+    branches:
+      - main
+jobs:
+  render-cheatsheet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: fontist/setup-fontist@v2
+      - run: fontist install "Noto Serif CJK SC"
+      - name: Render pdf
+        uses: typst-community/setup-typst@v4
+        with:
+          typst-version: ^0.13.0
+          cache-dependency-path: utils.typ
+      - run: typst compile main.typ math4cs-cheatsheet.pdf
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cheatsheet
+          path: math4cs-cheatsheet.pdf
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: math4cs-cheatsheet.pdf
+          draft: false
+          prerelease: false
+          tag_name: "latest"
+          body: "Latest build from the `main` branch. This release is automatically updated."
