@@ -9,13 +9,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: fontist/setup-fontist@v2
-      - run: fontist install "Noto Serif CJK SC"
+      - run: |
+          fontist install "Libertinus Serif"
+          fontist install "Noto Serif CJK SC"
       - name: Render pdf
         uses: typst-community/setup-typst@v4
         with:
           typst-version: ^0.13.0
           cache-dependency-path: utils.typ
-      - run: typst compile main.typ math4cs-cheatsheet.pdf
+      - run: |
+          typst compile main.typ math4cs-cheatsheet.pdf \
+            --font-path ~/.fontist/fonts
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
